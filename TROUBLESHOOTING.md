@@ -50,6 +50,23 @@
 - Changed NODE_ENV from development to production to reduce memory usage
 - Eliminated Next.js non-standard NODE_ENV warning
 
+## 9. HTTP 500 Internal Server Error - Blank Page
+**Problem**: App returning HTTP 500 error and displaying blank page despite pods running
+**Root Cause**: Missing Firebase environment variables in pods
+**Solutions**:
+- Added Firebase environment variables to GitHub Secrets
+- Updated deployment.yml to reference GitHub Secrets
+- Added sed commands in CI/CD to substitute secret values during deployment
+- Verified environment variables are properly injected into pods
+
+## 10. Environment Variable Management Issues
+**Problem**: Firebase configuration not reaching application pods
+**Solutions**:
+- Store sensitive values in GitHub Secrets (encrypted)
+- Use sed commands to substitute placeholders during deployment
+- Add environment variables to both Docker build (ARG) and Kubernetes deployment (env)
+- Verify variables are present in pods using kubectl exec
+
 ## Key Lessons
 - Always use environment variables for sensitive data
 - GitHub Actions workflows must be in `.github/workflows/` (plural)
@@ -59,3 +76,5 @@
 - Terraform safely handles existing resources without duplication
 - Kubernetes deployments need adequate timeouts and resource allocation for startup
 - Next.js applications require sufficient memory allocation (512Mi+ recommended)
+- Missing environment variables cause HTTP 500 errors even when pods are running
+- Use GitHub Secrets for secure environment variable management in CI/CD
