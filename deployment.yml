@@ -5,7 +5,9 @@ metadata:
   labels:
     app: reddit-clone
 spec:
-  replicas: 2
+  replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: reddit-clone
