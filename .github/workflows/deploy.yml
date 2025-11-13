@@ -119,12 +119,21 @@ jobs:
         kubectl apply -f service.yml
         kubectl rollout status deployment/reddit-clone-deployment --timeout=600s
         
-    - name: Get App URL
+    - name: Get App URL and Debug Info
       if: success()
       run: |
         echo "🎉 Deployment successful!"
         echo "Getting Load Balancer URL..."
         kubectl get service reddit-clone-service
+        echo ""
+        echo "Pod Status:"
+        kubectl get pods -l app=reddit-clone
+        echo ""
+        echo "Pod Logs (last 20 lines):"
+        kubectl logs -l app=reddit-clone --tail=20
+        echo ""
+        echo "Service Details:"
+        kubectl describe service reddit-clone-service
         echo ""
         echo "Your Reddit Clone is available at:"
         kubectl get svc reddit-clone-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}' || echo "Load Balancer URL not ready yet - check in 2-3 minutes"
