@@ -30,18 +30,19 @@ spec:
             cpu: "500m"
         env:
         - name: NODE_ENV
-          value: "production"
+          value: "development"
         - name: NODE_OPTIONS
           value: "--max-old-space-size=768"
-        livenessProbe:
-          httpGet:
-            path: /
-            port: 3000
-          initialDelaySeconds: 60
-          periodSeconds: 30
-        readinessProbe:
-          httpGet:
-            path: /
-            port: 3000
-          initialDelaySeconds: 30
-          periodSeconds: 10
+        # Temporarily disabled health checks
+        # livenessProbe:
+        #   httpGet:
+        #     path: /
+        #     port: 3000
+        #   initialDelaySeconds: 60
+        #   periodSeconds: 30
+        # readinessProbe:
+        #   httpGet:
+        #     path: /
+        #     port: 3000
+        #   initialDelaySeconds: 30
+        #   periodSeconds: 10
