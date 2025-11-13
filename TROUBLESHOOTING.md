@@ -41,6 +41,15 @@
 - Changed to development mode to match Dockerfile CMD
 - Added debugging steps to show pod status and logs on failure
 
+## 8. JavaScript Heap Out of Memory
+**Problem**: Pods crashing with "FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of memory"
+**Solutions**:
+- Increased memory requests from 128Mi to 512Mi
+- Increased memory limits from 256Mi to 1Gi
+- Added NODE_OPTIONS="--max-old-space-size=768" to increase heap size
+- Changed NODE_ENV from development to production to reduce memory usage
+- Eliminated Next.js non-standard NODE_ENV warning
+
 ## Key Lessons
 - Always use environment variables for sensitive data
 - GitHub Actions workflows must be in `.github/workflows/` (plural)
@@ -49,3 +58,4 @@
 - Docker builds need proper ARG/ENV handling for runtime variables
 - Terraform safely handles existing resources without duplication
 - Kubernetes deployments need adequate timeouts and resource allocation for startup
+- Next.js applications require sufficient memory allocation (512Mi+ recommended)
