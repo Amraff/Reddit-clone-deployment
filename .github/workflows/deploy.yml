@@ -35,6 +35,11 @@ jobs:
         terraform_version: 1.5.0
         terraform_wrapper: false
 
+    - name: Create S3 bucket for Terraform state
+      run: |
+        aws s3api create-bucket --bucket rafftec-backend-bucket112025 --region us-west-2 --create-bucket-configuration LocationConstraint=us-west-2 || true
+        aws s3api put-bucket-versioning --bucket rafftec-backend-bucket112025 --versioning-configuration Status=Enabled
+
     - name: Terraform Init
       run: terraform init
       working-directory: ./Eks-terraform
