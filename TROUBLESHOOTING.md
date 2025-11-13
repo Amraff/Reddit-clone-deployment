@@ -18,8 +18,24 @@
 **Problem**: EKS Auto Mode requires cluster version 1.29+, but config had 1.28
 **Solution**: Updated EKS cluster version from 1.28 to 1.29 in Terraform configuration
 
+## 5. Docker Build Failures
+**Problem**: Docker build failed with missing environment variables and legacy ENV format
+**Solutions**:
+- Fixed ENV format from `ENV PORT 3000` to `ENV PORT=3000`
+- Added ARG instructions to accept Firebase config as build arguments
+- Updated GitHub Actions to pass Firebase secrets during Docker build
+
+## 6. Resource Management Concerns
+**Problem**: Worry about duplicate resource creation when pushing changes
+**Solution**: Terraform manages resources idempotently - existing resources are detected and preserved
+- S3 bucket creation uses `|| true` to prevent errors if exists
+- Terraform state tracking prevents duplicates
+- `terraform plan` shows changes before applying
+
 ## Key Lessons
 - Always use environment variables for sensitive data
 - GitHub Actions workflows must be in `.github/workflows/` (plural)
 - S3 backend buckets must exist before Terraform init
 - Check AWS service version requirements for new features
+- Docker builds need proper ARG/ENV handling for runtime variables
+- Terraform safely handles existing resources without duplication
