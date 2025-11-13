@@ -50,7 +50,7 @@ data "aws_subnets" "public" {
 resource "aws_eks_cluster" "example" {
   name     = "reddit-cluster"
   role_arn = aws_iam_role.example.arn
-  version  = "1.28"
+  version  = "1.29"
 
   vpc_config {
     subnet_ids              = data.aws_subnets.public.ids
