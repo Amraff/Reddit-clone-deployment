@@ -103,6 +103,12 @@ jobs:
       run: |
         aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name ${{ env.EKS_CLUSTER_NAME }}
 
+    - name: Clean up old deployment
+      run: |
+        kubectl delete deployment reddit-clone-deployment --ignore-not-found=true
+        kubectl delete pods -l app=reddit-clone --ignore-not-found=true
+        sleep 10
+        
     - name: Deploy to EKS
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
