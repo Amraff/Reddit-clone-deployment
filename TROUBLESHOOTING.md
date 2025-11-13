@@ -32,6 +32,15 @@
 - Terraform state tracking prevents duplicates
 - `terraform plan` shows changes before applying
 
+## 7. Deployment Timeout Issues
+**Problem**: Kubernetes deployment exceeded progress deadline - pods not starting within timeout
+**Solutions**:
+- Increased rollout timeout from default to 600 seconds
+- Reduced resource requirements (memory: 128Mi, cpu: 100m)
+- Extended health check delays (initialDelaySeconds: 60 for liveness, 30 for readiness)
+- Changed to development mode to match Dockerfile CMD
+- Added debugging steps to show pod status and logs on failure
+
 ## Key Lessons
 - Always use environment variables for sensitive data
 - GitHub Actions workflows must be in `.github/workflows/` (plural)
@@ -39,3 +48,4 @@
 - Check AWS service version requirements for new features
 - Docker builds need proper ARG/ENV handling for runtime variables
 - Terraform safely handles existing resources without duplication
+- Kubernetes deployments need adequate timeouts and resource allocation for startup

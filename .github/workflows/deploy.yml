@@ -111,4 +111,11 @@ jobs:
         sed -i "s|sevenajay/reddit:latest|$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG|g" deployment.yml
         kubectl apply -f deployment.yml
         kubectl apply -f service.yml
-        kubectl rollout status deployment/reddit-clone-deployment
+        kubectl rollout status deployment/reddit-clone-deployment --timeout=600s
+        
+    - name: Debug deployment if failed
+      if: failure()
+      run: |
+        kubectl get pods
+        kubectl describe deployment reddit-clone-deployment
+        kubectl logs -l app=reddit-clone --tail=50
