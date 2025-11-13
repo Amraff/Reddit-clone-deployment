@@ -155,7 +155,11 @@ jobs:
         curl -s http://$LB_URL --connect-timeout 10 | head -20 || echo "No response content"
         echo ""
         echo "Environment variables in pod:"
-        kubectl exec -l app=reddit-clone -- env | grep NEXT_PUBLIC || echo "No Firebase env vars found"
+        POD_NAME=$(kubectl get pods -l app=reddit-clone -o jsonpath='{.items[0].metadata.name}')
+        kubectl exec $POD_NAME -- env | grep NEXT_PUBLIC || echo "No Firebase env vars found"
+        echo ""
+        echo "Testing direct pod connection:"
+        kubectl exec $POD_NAME -- curl -s http://localhost:3000 | head -10 || echo "Pod not responding"
         echo ""
         echo "Your Reddit Clone is available at: http://$LB_URL"
         
