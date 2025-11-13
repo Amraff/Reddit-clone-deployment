@@ -5,7 +5,7 @@ metadata:
   labels:
     app: reddit-clone
 spec:
-  replicas: 1
+  replicas: 2
   strategy:
     type: Recreate
   selector:
@@ -30,19 +30,16 @@ spec:
             cpu: "500m"
         env:
         - name: NODE_ENV
-          value: "development"
+          value: "production"
         - name: NODE_OPTIONS
           value: "--max-old-space-size=768"
-        # Temporarily disabled health checks
-        # livenessProbe:
-        #   httpGet:
-        #     path: /
-        #     port: 3000
-        #   initialDelaySeconds: 60
-        #   periodSeconds: 30
-        # readinessProbe:
-        #   httpGet:
-        #     path: /
-        #     port: 3000
-        #   initialDelaySeconds: 30
-        #   periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 3000
+          initialDelaySeconds: 60
+          periodSeconds: 30
+        readinessProbe:
+          tcpSocket:
+            port: 3000
+          initialDelaySeconds: 30
+          periodSeconds: 10
