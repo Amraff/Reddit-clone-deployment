@@ -67,6 +67,29 @@
 - Add environment variables to both Docker build (ARG) and Kubernetes deployment (env)
 - Verify variables are present in pods using kubectl exec
 
+## 11. Sed Command Syntax Error - Invalid Back Reference
+**Problem**: `sed: -e expression #1, char 30: Invalid back reference` when trying to substitute GitHub Secrets syntax
+**Root Cause**: GitHub Actions syntax `${{ secrets.NAME }}` contains special characters that break sed regex
+**Solutions**:
+- Replaced GitHub Secrets syntax with simple placeholders in deployment.yml
+- Updated sed commands to use simple string replacement instead of complex regex
+- Used format: `sed -i "s|PLACEHOLDER|${{ secrets.VALUE }}|g"`
+
+## 12. React JSX Runtime Error - HTTP 500
+**Problem**: `(0 , react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV) is not a function`
+**Root Cause**: NODE_ENV mismatch - running `npm run dev` (development) with `NODE_ENV=production`
+**Solutions**:
+- Changed NODE_ENV from "production" to "development" to match npm command
+- Ensured consistency between Docker CMD and environment variables
+- Fixed JSX runtime compatibility issues
+
+## 13. kubectl Command Syntax Errors
+**Problem**: `error: unknown shorthand flag: 'l' in -l` when using kubectl exec
+**Solutions**:
+- Fixed kubectl exec syntax: `kubectl exec $POD_NAME -- command` instead of `kubectl exec -l`
+- Used pod name selection: `POD_NAME=$(kubectl get pods -l app=reddit-clone -o jsonpath='{.items[0].metadata.name}')`
+- Added proper error handling for missing executables in containers
+
 ## Key Lessons
 - Always use environment variables for sensitive data
 - GitHub Actions workflows must be in `.github/workflows/` (plural)
@@ -78,3 +101,6 @@
 - Next.js applications require sufficient memory allocation (512Mi+ recommended)
 - Missing environment variables cause HTTP 500 errors even when pods are running
 - Use GitHub Secrets for secure environment variable management in CI/CD
+- Avoid special characters in sed regex patterns - use simple string replacement
+- Match NODE_ENV with the actual npm command being executed
+- Use proper kubectl syntax for pod selection and command execution
